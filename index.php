@@ -6,15 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="timer.js"></script>
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    
-    <div class="timer">
-        <button class="timer-start">Start</button>
+    <div class="wrapper">
 
-        <p>Elapsed time: <span class="time">0</span>s</p>
+        <div class="timer">
+            <div class="timer-main">
+                <button class="timer-start">Start</button>
+
+                <input class="timer-input" name="timeEntryName" type="text">
+            </div>
+            
+            
+            <p>Elapsed time: <span class="time">0</span>s</p>
+        </div>
+
     </div>
+    
     
 
 
