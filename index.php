@@ -12,15 +12,18 @@
 
     <div class="wrapper">
 
-        <div class="timer">
+        <form class="timer">
             <div class="timer-main">
-                <button class="timer-start">Start</button>
+                <button type="submit" class="timer-start">Start</button>
 
                 <input class="timer-input" name="timeEntryName" type="text">
+
+                <span class="timer-time">00:00</span>
             </div>
-            
-            
-            <p>Elapsed time: <span class="time">0</span>s</p>
+        </form>
+
+        <div class="time-entries-log">
+
         </div>
 
     </div>

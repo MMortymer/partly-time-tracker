@@ -1,85 +1,86 @@
-class Timer {
-    constructor() {
-        this.isRunning = false;
-        this.startTime = 0;
-        this.overallTime = 0;
-    }
-
-    _getTimeElapsedSinceLastStart() {
-        if (!this.startTime) {
-            return 0;
-        }
-
-        return Date.now() - this.startTime;
-    }
-
-    start() {
-        if (this.isRunning) {
-            return console.error('Timer is already running');
-        }
-
-        this.isRunning = true;
-
-        this.startTime = Date.now();
-    }
-
-    stop() {
-        if (!this.isRunning) {
-            return console.error('Timer is already stopped');
-        }
-
-        this.isRunning = false;
-
-        this.overallTime = this.overallTime + this._getTimeElapsedSinceLastStart();
-    }
-
-    reset() {
-        this.overallTime = 0;
-
-        if (this.isRunning) {
-            this.startTime = Date.now();
-            return;
-        }
-
-        this.startTime = 0;
-    }
-
-    getTime() {
-        if (!this.startTime) {
-            return 0;
-        }
-
-        if (this.isRunning) {
-            return this.overallTime + this._getTimeElapsedSinceLastStart();
-        }
-
-        return this.overallTime;
-    }
-}
-
-
-const timer = new Timer();
-
 window.onload = function () {
+    let timerInterval;
+    let timestring;
+
+    startTimer = () => {
+        clearInterval(timerInterval);
+        document.querySelector(".timer-time").innerText = "00:00";
+        
+        let second = 0,
+            minute = 0,
+            hour = 0,
+            timestring = '';
+    
+        timerInterval = setInterval(() => {
+            second++;
+    
+            if (second == 60) {
+                minute++;
+                second = 0;
+            }
+    
+            if (minute == 60) {
+                hour++;
+                minute = 0;
+            }
+    
+            timestring = (hour !== 0 ? hour+":" : "") + 
+            (minute < 10 ? "0"+minute : minute ) + ":" +
+            (second < 10 ? "0"+second : second );
+    
+            document.querySelector(".timer-time").innerText = timestring;
+        }, 1000)
+
+        document.querySelector(".timer-start").classList.add("timer-stop");
+        document.querySelector(".timer-stop").classList.remove("timer-start");
+        document.querySelector(".timer-stop").innerText = "Stop";
+    }
+
+    stopTimer = (e) => {
+        clearInterval(timerInterval);
+        let timestring = document.querySelector(".timer-time").innerText;
+        let entryName = document.querySelector(".timer-input").value;
+        document.querySelector(".timer-time").innerText = "00:00";
+        document.querySelector(".timer-input").value = "";
+        document.querySelector(".timer-stop").classList.add("timer-start");
+        document.querySelector(".timer-start").classList.remove("timer-stop");
+        document.querySelector(".timer-start").innerText = "Start";
+        return [timestring, entryName];
+    }
+
+    addTimeEntryToLog = (timestring, timeEntryName) => {
+        // Append new Time Entry to the log
+        let timeEntry = document.createElement("div");
+        timeEntry.className = "time-entry";
+        
+        let time = document.createElement("span");
+        time.className = "time-entry-value";
+        let timeText = document.createTextNode(timestring);
+        time.appendChild(timeText);
+
+        let entryName= document.createElement("p");
+        entryName.className = "time-entry-name";
+        let entryNameText = timeEntryName !== "" ? document.createTextNode(timeEntryName) : document.createTextNode("(no description)");
+        entryName.appendChild(entryNameText);
+
+        timeEntry.appendChild(time);
+        timeEntry.appendChild(entryName);
+        
+        let log = document.querySelector(".time-entries-log");
+        log.prepend(timeEntry);
+    }
+
+
+
     document.addEventListener('click', function (e) {
-        if (e.target && e.target.classList[0] == 'timer-start') 
-        {
-            timer.start();
-            document.getElementsByClassName("timer-start")[0].classList.add("timer-stop");
-            document.getElementsByClassName("timer-stop")[0].classList.remove("timer-start");
-            document.getElementsByClassName("timer-stop")[0].innerText = "Stop";
-            setInterval(() => {
-                const timeInSeconds = Math.round(timer.getTime() / 1000);
-                document.getElementsByClassName('time')[0].innerText = timeInSeconds;
-            }, 100)
-        } 
-        else if (e.target && e.target.classList[0] == 'timer-stop') 
-        {
-            timer.stop();
-            document.getElementsByClassName("timer-stop")[0].classList.add("timer-start");
-            document.getElementsByClassName("timer-start")[0].classList.remove("timer-stop");
-            document.getElementsByClassName("timer-start")[0].innerText = "Start";
-            document.getElementsByClassName('time')[0].innerText = Math.round(timer.getTime() / 1000);
+        e.preventDefault();
+        if (e.target && e.target.classList.contains("timer-start")) {
+            startTimer();
+        } else if (e.target && e.target.classList.contains("timer-stop")) {
+            let [timestring, timeEntryName] = stopTimer();
+            addTimeEntryToLog(timestring, timeEntryName);
         }
     });
+
+    
 }

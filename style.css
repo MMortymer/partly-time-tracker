@@ -26,3 +26,18 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+.time-entries-log {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: column;
+}
+
+.time-entry {
+    display: flex;
+    margin-bottom: 0.5em;
+}
+
+.time-entry-value {
+    margin-right: 0.5em;
+}
